@@ -1,7 +1,7 @@
 // Phase 6 E2E: /api/analyze (empty-week skip + validations + LIVE AI call) + cron auth.
 // Run: dev server chal raha ho, phir `node scripts/test-analyze.mjs`
 // Note: 1 real OpenRouter call hota hai (cheap model). Daily cap 3 ka dhyan rakho.
-const BASE = 'http://localhost:3000';
+const BASE = process.env.BASE || 'http://localhost:3000';
 const TODAY = '2026-09-03';
 const MONDAY = '2026-08-31';
 let pass = 0;

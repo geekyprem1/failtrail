@@ -61,10 +61,10 @@
   - Done: `curl -H "Authorization: Bearer ..."` se manual trigger pass. ✅ VERIFIED (401 guards pass, `vercel.json` schedule Sun 15:30 UTC = 21:00 IST; positive run analyzeWeek share karta hai).
 
 ## Phase 7 — Deploy
-- [ ] **T7.1 Vercel deploy:** repo push → import → env vars → deploy.
-  - Done: prod URL par planner + timer + alarm (foreground) kaam kare.
-- [ ] **T7.2 Prod smoke:** 1 task end-to-end (plan → ring → start → pause+reason → resume → complete+feedback → history → on-demand AI).
-  - Done: 5 tables me rows + 1 insight row, koi console error nahi.
+- [x] **T7.1 Vercel deploy:** repo push → import → env vars → deploy.
+  - Done: prod URL par planner + timer + alarm (foreground) kaam kare. ✅ VERIFIED (https://failtrail-tau.vercel.app/ live, cron registered).
+- [x] **T7.2 Prod smoke:** 1 task end-to-end (plan → ring → start → pause+reason → resume → complete+feedback → history → on-demand AI).
+  - Done: 5 tables me rows + 1 insight row, koi console error nahi. ✅ VERIFIED (prod E2E 55/55: tasks 9 + sessions 19 + history 16 + analyze 11 live Hindi report).
 - [x] **T7.3 README:** setup steps + env list + cron note + Phase 2 auth plan (2 para).
   - Done: naya banda README padhke local chala sake. ✅ VERIFIED (README me setup + scripts + deploy + Phase 2 plan).
 

@@ -1,6 +1,6 @@
 // Phase 2 E2E: /api/tasks CRUD roundtrip against dev server (http://localhost:3000).
 // Run: dev server chal raha ho, phir `node scripts/test-tasks.mjs`
-const BASE = 'http://localhost:3000';
+const BASE = process.env.BASE || 'http://localhost:3000';
 const DATE = '2026-09-03';
 let pass = 0;
 let fail = 0;

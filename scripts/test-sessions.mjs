@@ -1,6 +1,6 @@
 // Phase 4 E2E: /api/sessions lifecycle + /api/interruptions.
 // Run: dev server chal raha ho, phir `node scripts/test-sessions.mjs`
-const BASE = 'http://localhost:3000';
+const BASE = process.env.BASE || 'http://localhost:3000';
 const DATE = '2026-09-03';
 let pass = 0;
 let fail = 0;
