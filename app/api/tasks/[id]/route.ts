@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 import { normalizeTime, taskInputSchema } from '@/lib/tasks';
 import type { TaskStatus } from '@/lib/types';
 
@@ -43,7 +43,13 @@ export async function PATCH(
     return NextResponse.json({ ok: false, error: msg }, { status: 400 });
   }
   const v = parsed.data;
-  const db = createServerClient();
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
   const { data: existing, error: findErr } = await db
     .from('tasks')
     .select('*')
@@ -100,7 +106,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const db = createServerClient();
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
   const { error } = await db.from('tasks').delete().eq('id', id);
   if (error) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });

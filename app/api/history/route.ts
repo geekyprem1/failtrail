@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_RANGE_DAYS = 62;
@@ -32,7 +32,13 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const db = createServerClient();
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
   const { data: tasks, error: tErr } = await db
     .from('tasks')
     .select('*')

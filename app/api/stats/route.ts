@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 
 /**
  * GET /api/stats?date=YYYY-MM-DD — Today strip ke numbers:
@@ -10,7 +10,13 @@ export async function GET(req: NextRequest) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return NextResponse.json({ ok: false, error: '?date=YYYY-MM-DD required' }, { status: 400 });
   }
-  const db = createServerClient();
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
 
   const { data: tasks, error: tErr } = await db
     .from('tasks')

@@ -1,4 +1,4 @@
-import { createServerClient } from './supabaseServer';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { buildWeekStats } from './stats';
 import { generateInsight } from './openrouter';
 
@@ -21,12 +21,18 @@ export interface AnalyzeResult {
 /**
  * Shared pipeline: week data → stats → OpenRouter → weekly_insights upsert.
  * Zero tasks → { skipped: true }, AI call nahi hota (cost bachta hai).
+ * userId explicit hai taaki authed client (RLS) aur service client (cron) dono chale.
  */
-export async function analyzeWeek(from: string, to: string): Promise<AnalyzeResult> {
-  const db = createServerClient();
+export async function analyzeWeek(
+  from: string,
+  to: string,
+  opts: { db: SupabaseClient; userId: string }
+): Promise<AnalyzeResult> {
+  const { db, userId } = opts;
   const { data: tasks, error: tErr } = await db
     .from('tasks')
     .select('*')
+    .eq('user_id', userId)
     .gte('planned_date', from)
     .lte('planned_date', to);
   if (tErr) throw new Error(tErr.message);
@@ -51,6 +57,7 @@ export async function analyzeWeek(from: string, to: string): Promise<AnalyzeResu
     .from('weekly_insights')
     .upsert(
       {
+        user_id: userId,
         week_start: from,
         week_end: to,
         stats_json: stats,
@@ -59,7 +66,7 @@ export async function analyzeWeek(from: string, to: string): Promise<AnalyzeResu
         recommendations: insight.recommendations,
         model_used: model,
       },
-      { onConflict: 'week_start,week_end' }
+      { onConflict: 'user_id,week_start,week_end' }
     )
     .select()
     .single();

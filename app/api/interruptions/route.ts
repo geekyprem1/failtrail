@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 import { REASON_CODES } from '@/lib/tasks';
 
 /**
@@ -16,6 +16,13 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
   let body: unknown;
   try {
     body = await req.json();
@@ -30,7 +37,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: msg }, { status: 400 });
   }
   const v = parsed.data;
-  const db = createServerClient();
   const { data: task } = await db.from('tasks').select('id').eq('id', v.task_id).single();
   if (!task) {
     return NextResponse.json({ ok: false, error: 'Task nahi mila' }, { status: 404 });

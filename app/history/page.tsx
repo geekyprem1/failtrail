@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { addDaysISO, todayISO } from '@/lib/tasks';
+import RequireAuth from '@/components/RequireAuth';
 import { useLang } from '@/components/LanguageProvider';
 import type {
   Category,
@@ -118,6 +119,7 @@ export default function HistoryPage() {
   const selCls = 'input rounded-xl py-2 text-xs font-semibold';
 
   return (
+    <RequireAuth>
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-10 pt-6">
       <header className="mb-5">
         <h1 className="bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-[1.7rem] font-black leading-tight tracking-tight text-transparent">
@@ -276,5 +278,6 @@ export default function HistoryPage() {
         </>
       )}
     </main>
+    </RequireAuth>
   );
 }

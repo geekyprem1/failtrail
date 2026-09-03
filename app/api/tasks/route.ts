@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 import { normalizeTime, taskInputSchema } from '@/lib/tasks';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -13,7 +13,13 @@ export async function GET(req: NextRequest) {
       { status: 400 }
     );
   }
-  const db = createServerClient();
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
   const { data, error } = await db
     .from('tasks')
     .select('*')
@@ -27,6 +33,13 @@ export async function GET(req: NextRequest) {
 
 /** POST /api/tasks — naya planned task. Overlap par warning client deta hai, server block nahi karta. */
 export async function POST(req: NextRequest) {
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+  }
   let body: unknown;
   try {
     body = await req.json();
@@ -41,10 +54,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: msg }, { status: 400 });
   }
   const v = parsed.data;
-  const db = createServerClient();
   const { data, error } = await db
     .from('tasks')
     .insert({
+      user_id: user.id,
       title: v.title,
       description: v.description ?? '',
       planned_date: v.planned_date,

@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 import { todayISO } from '@/lib/tasks';
 import { analyzeWeek, weekMonday } from '@/lib/analyzeWeek';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_RANGE_DAYS = 14; // token guard
-const DAILY_CAP = 3; // cost guard (manual + cron milakar)
+const DAILY_CAP = 3; // cost guard per user (manual + cron milakar)
+
+function unauthorized() {
+  return NextResponse.json({ ok: false, error: 'Login karo — session nahi mili' }, { status: 401 });
+}
 
 /**
- * POST /api/analyze {from?, to?} — on-demand AI report.
+ * POST /api/analyze {from?, to?} — on-demand AI report (login required).
  * Default: is week ka Monday → aaj. Zero tasks → { skipped: true }, AI call nahi.
  */
 export async function POST(req: NextRequest) {
@@ -36,12 +40,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // cost guard: aaj 3 reports ban chuki to block
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) return unauthorized();
+
+  // cost guard: is user ki aaj 3 reports ban chuki to block
   try {
-    const db = createServerClient();
     const { count } = await db
       .from('weekly_insights')
       .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
       .gte('created_at', `${today}T00:00:00`);
     if ((count ?? 0) >= DAILY_CAP) {
       return NextResponse.json(
@@ -54,7 +64,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await analyzeWeek(from, to);
+    const result = await analyzeWeek(from, to, { db, userId: user.id });
     return NextResponse.json({ ok: true, data: result });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'AI fail ho gaya';
@@ -63,14 +73,20 @@ export async function POST(req: NextRequest) {
   }
 }
 
-/** GET /api/analyze — isi week ki saved report (bina AI call). */
+/** GET /api/analyze — isi week ki saved report (bina AI call, login required). */
 export async function GET() {
+  const db = await createAuthedClient();
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) return unauthorized();
+
   const today = todayISO();
   const from = weekMonday(today);
-  const db = createServerClient();
   const { data, error } = await db
     .from('weekly_insights')
     .select('*')
+    .eq('user_id', user.id)
     .eq('week_start', from)
     .order('created_at', { ascending: false })
     .limit(1)

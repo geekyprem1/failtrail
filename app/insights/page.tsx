@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import RequireAuth from '@/components/RequireAuth';
 import { todayISO, weekMonday } from '@/lib/tasks';
 import { useLang } from '@/components/LanguageProvider';
 import type { WeeklyInsight } from '@/lib/types';
@@ -71,6 +72,7 @@ export default function InsightsPage() {
   }
 
   return (
+    <RequireAuth>
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-10 pt-6">
       <header className="mb-5">
         <h1 className="bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-[1.7rem] font-black leading-tight tracking-tight text-transparent">
@@ -164,5 +166,6 @@ export default function InsightsPage() {
 
       <p className="mt-5 text-center text-[11px] font-medium text-zinc-400">{t.insights.footer}</p>
     </main>
+    </RequireAuth>
   );
 }

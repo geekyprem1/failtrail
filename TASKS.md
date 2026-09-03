@@ -74,8 +74,15 @@
 - [x] **T8.2 Premium theme:** gradient backdrop, glass cards, gradient buttons/chips, dark sticky nav, rise animations, bottom-sheet modals, shared `.card/.btn-*/.input` primitives.
   - Done: build pass, `/`, `/history`, `/insights` 200. ✅ VERIFIED.
 
-## Phase 2 Backlog (v1 me mat karna)
-- Supabase Auth + RLS, FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
+## Phase 9 — Multi-user Auth (Supabase OTP + RLS)
+- [x] **Auth clients:** `@supabase/ssr` browser/authed/service clients, cookie session.
+- [x] **Migration SQL:** `supabase/auth-migration.sql` — per-user RLS policies + `weekly_insights.user_id` + claim function. ✅ FILE READY — **USER STEP: SQL Editor me Run karo.**
+- [x] **API auth:** saare routes login-required (401), writes user-scoped, cron service-role per-user loop. ✅ VERIFIED (`test-auth.mjs` 12/12).
+- [x] **Login UI:** `/login` OTP + nav auth state + `RequireAuth` gates + claim on first login. ✅ VERIFIED (build + `/login` 200).
+- [ ] **User verify:** migration Run → `SUPABASE_SERVICE_ROLE_KEY` env me → OTP login → purana data claim → full loop. (user step)
+
+## Phase 2 Backlog (baaki)
+- FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
 
 ## Definition of Done (v1)
 1. Roz ka loop chalता है: plan → alarm → timer → reason/feedback.

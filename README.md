@@ -19,13 +19,14 @@ npm install
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | wahi (anon public key) |
 | `OPENROUTER_API_KEY` | openrouter.ai/keys |
 | `OPENROUTER_MODEL` | default `openai/gpt-4o-mini` |
+| `SUPABASE_SERVICE_ROLE_KEY` | supabase.com → Settings → API → `service_role` (server-only, cron ke liye) |
 | `SITE_URL` | local: `http://localhost:3000`, prod: Vercel URL |
 | `CRON_SECRET` | koi lamba random string (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`) |
 
-### Database (1 baar)
+### Database (1 baar + auth migration)
 
-Supabase Dashboard → **SQL Editor → New query** → `supabase/schema.sql` ka poora content
-paste → **Run**. Re-runnable hai (policies समेत — v1 me anon key se open access).
+Supabase Dashboard → **SQL Editor → New query** → `supabase/schema.sql` paste → **Run**.
+Phir wahi par `supabase/auth-migration.sql` paste → **Run** (login-required RLS policies).
 
 Verify:
 
@@ -65,8 +66,13 @@ Docs: `PRD.md` (features), `ARCHITECTURE.md` (design + schema + API), `TASKS.md`
 2. Deploy → Cron auto-register (`/api/cron/weekly`, Sunday 21:00 IST).
 3. Smoke: 1 task end-to-end (plan → ring → start → pause+reason → resume → complete+feedback → History → Insights me on-demand report).
 
-## 5. Phase 2 plan (abhi nahi)
+## 5. Login (Email OTP)
 
-Supabase Auth (Email/Google) ON → RLS policies `auth.uid() = user_id` se replace
-(`supabase/schema.sql` ke `v1_open` policies hatana) → anon client me `user_id` bhejna →
-FCM mobile push, streaks, PDF export.
+`/login` par email dalo → 6-digit OTP → verify. Pehli login par purana
+bina-user data auto-claim ho jata hai (`/api/auth/claim`). Bina login har API 401 deta hai.
+Har user ka data RLS se isolated hai; Sunday cron har user ki alag report banata hai.
+
+## 6. Aage (backlog)
+
+Google OAuth login (Supabase → Authentication → Providers → Google, GCP credentials chahiye),
+FCM mobile push alarm, streaks/gamification, Pomodoro auto-breaks, PDF export.

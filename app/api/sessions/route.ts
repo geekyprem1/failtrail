@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerClient } from '@/lib/supabaseServer';
+import { createAuthedClient } from '@/lib/supabaseServer';
 import { REASON_CODES } from '@/lib/tasks';
 
 /**
@@ -46,6 +46,9 @@ const actionSchema = z.discriminatedUnion('action', [
 interface Db {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   from: (t: string) => any;
+  auth: {
+    getUser: () => Promise<{ data: { user: { id: string } | null } }>;
+  };
 }
 
 function err(message: string, status = 400) {
@@ -77,6 +80,11 @@ function settleClose(
 }
 
 export async function POST(req: NextRequest) {
+  const db = (await createAuthedClient()) as Db;
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) return err('Login karo — session nahi mili', 401);
   let body: unknown;
   try {
     body = await req.json();
@@ -91,7 +99,6 @@ export async function POST(req: NextRequest) {
     return err(msg);
   }
 
-  const db = createServerClient() as Db;
   const nowMs = Date.now();
   const nowIso = new Date(nowMs).toISOString();
   const a = parsed.data;
@@ -248,7 +255,11 @@ export async function POST(req: NextRequest) {
  * GET /api/sessions?date=YYYY-MM-DD → us din ke saare khule sessions.
  */
 export async function GET(req: NextRequest) {
-  const db = createServerClient() as Db;
+  const db = (await createAuthedClient()) as Db;
+  const {
+    data: { user },
+  } = await db.auth.getUser();
+  if (!user) return err('Login karo — session nahi mili', 401);
   const taskId = req.nextUrl.searchParams.get('task_id');
   const date = req.nextUrl.searchParams.get('date');
 

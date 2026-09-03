@@ -5,6 +5,7 @@ import AlarmRinger from '@/components/AlarmRinger';
 import CompleteModal, { type CompletionResult } from '@/components/CompleteModal';
 import FocusTimer from '@/components/FocusTimer';
 import ReasonModal, { type ReasonMode, type ReasonResult } from '@/components/ReasonModal';
+import RequireAuth from '@/components/RequireAuth';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import StatsStrip, { type DayStats } from '@/components/StatsStrip';
 import TaskForm from '@/components/TaskForm';
@@ -184,6 +185,7 @@ export default function Home() {
   const missedTask = tasks.find((task) => task.status === 'missed');
 
   return (
+    <RequireAuth>
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-10 pt-6">
       <header className="mb-5">
         <h1 className="bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-[1.7rem] font-black leading-tight tracking-tight text-transparent">
@@ -353,5 +355,6 @@ export default function Home() {
         />
       )}
     </main>
+    </RequireAuth>
   );
 }
