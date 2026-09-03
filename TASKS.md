@@ -100,6 +100,13 @@
 - [x] **Migration (optional):** `supabase/ai-lang.sql` — badge ke liye `lang` column. **USER STEP: Run karo.**
 - [ ] **User verify:** Insights par EN toggle → Generate → English report + badge. ✅ VERIFIED (build + 401 path; live EN user-side).
 
+## Phase 13 — Android App (Capacitor)
+- [x] **Setup:** `@capacitor/core+cli+android+local-notifications`, `capacitor.config.ts` (`com.failtrail.app`, prod URL), `android/` platform, adaptive icons + splash (136 assets).
+- [x] **Native exact alarms:** `hooks/useNativeAlarms.ts` — planned tasks auto-schedule (high-importance channel), reschedule/cancel reconcile, web par no-op. ✅ VERIFIED (web build clean).
+- [x] **Debug APK:** `android/app/build/outputs/apk/debug/app-debug.apk` (4.5 MB). ✅ VERIFIED (BUILD SUCCESSFUL, JDK 21 = Studio `jbr`).
+- [ ] **User test:** phone par install → permissions → alarm test (neeche steps).
+- [ ] **Later:** signed AAB (Play Console $25) — `assembleRelease` + upload key.
+
 ## Phase 2 Backlog (baaki)
 - FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
 

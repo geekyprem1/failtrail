@@ -12,6 +12,7 @@ import GamificationStrip, { type GamiData } from '@/components/GamificationStrip
 import TaskForm from '@/components/TaskForm';
 import TaskList from '@/components/TaskList';
 import { useAlarms } from '@/hooks/useAlarms';
+import { useNativeAlarms } from '@/hooks/useNativeAlarms';
 import { useLang } from '@/components/LanguageProvider';
 import { addDaysISO, todayISO } from '@/lib/tasks';
 import type { Task, TaskSession } from '@/lib/types';
@@ -105,6 +106,7 @@ export default function Home() {
   }, [refresh]);
 
   const alarms = useAlarms(tasks, refresh, lang);
+  useNativeAlarms(tasks, lang);
 
   async function handleDelete(id: string) {
     setBusy(true);

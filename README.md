@@ -78,7 +78,23 @@ warna email link block ho jayega.
 bina-user data auto-claim ho jata hai (`/api/auth/claim`). Bina login har API 401 deta hai.
 Har user ka data RLS se isolated hai; Sunday cron har user ki alag report banata hai.
 
-## 6. Aage (backlog)
+## 6. Android app (Capacitor)
+
+Web code same rehta hai — `android/` native shell hai jo prod URL load karta hai.
+
+```bash
+npx cap sync android          # web/config change ke baad
+# Android Studio me android/ kholo → Run, ya CLI:
+$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
+Set-Location android; .\gradlew.bat assembleDebug   # APK: android/app/build/outputs/apk/debug/
+```
+
+- Native exact alarms: task plan karte hi schedule, change/delete par auto-fix (`hooks/useNativeAlarms.ts`). App killed ho tab bhi bajta hai.
+- Phone par install: APK transfer → install (unknown apps allow) → **Notifications + Alarms & reminders** permission ON → future task banao → app band karo → time par notification aayega, tap se app khulegi.
+- Local dev live-reload: `capacitor.config.ts` me `server.url` LAN IP se replace → `npx cap sync`.
+- Release (Play Store): Android Studio → Build → Generate Signed Bundle/APK (upload key banao, sambhal ke rakho).
+
+## 7. Aage (backlog)
 
 Google OAuth login (Supabase → Authentication → Providers → Google, GCP credentials chahiye),
 FCM mobile push alarm, streaks/gamification, Pomodoro auto-breaks, PDF export.
