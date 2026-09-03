@@ -2,7 +2,7 @@
  * - Static/runtime cache taaki app jaldi khule aur offline shell dikhe.
  * - Push nahi (Phase 2 backlog). Alarm foreground checker + Notification API se bajta hai.
  */
-const CACHE = 'failtrail-v1';
+const CACHE = 'failtrail-v2';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -22,7 +22,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
-  if (new URL(request.url).origin !== self.location.origin) return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+  // API hamesha fresh — SW isko kabhi cache/serve nahi karega.
+  // (Yahi bug tha: delete/schedule ke baad SW purana cached list dikhata tha,
+  //  background revalidate ke baad hi pull-refresh par naya data aata tha.)
+  if (url.pathname.startsWith('/api/')) return;
   event.respondWith(
     caches.open(CACHE).then((cache) =>
       cache.match(request).then((hit) => {

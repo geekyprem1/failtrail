@@ -57,7 +57,7 @@ export default function HistoryPage() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`/api/history?from=${from}&to=${to}`);
+      const res = await fetch(`/api/history?from=${from}&to=${to}`, { cache: 'no-store' });
       const j = await res.json();
       if (!j.ok) throw new Error(j.error || 'Load fail ho gaya');
       setData(j.data);

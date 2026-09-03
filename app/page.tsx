@@ -60,8 +60,8 @@ export default function Home() {
     setError('');
     try {
       const [tRes, sRes] = await Promise.all([
-        fetch(`/api/tasks?date=${date}`),
-        fetch(`/api/sessions?date=${date}`),
+        fetch(`/api/tasks?date=${date}`, { cache: 'no-store' }),
+        fetch(`/api/sessions?date=${date}`, { cache: 'no-store' }),
       ]);
       const t = await tRes.json();
       const s = await sRes.json();
@@ -73,7 +73,7 @@ export default function Home() {
       setSessions(map);
       // stats fail ho to page mat roko
       try {
-        const stRes = await fetch(`/api/stats?date=${date}`);
+        const stRes = await fetch(`/api/stats?date=${date}`, { cache: 'no-store' });
         const st = await stRes.json();
         setStats(st.ok ? st.data : null);
       } catch {

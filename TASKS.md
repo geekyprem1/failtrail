@@ -85,6 +85,7 @@
 - [x] **T10.1 Typography:** Plus Jakarta Sans (body) + Bricolage Grotesque (display) via next/font, `font-display` headings/numbers, iOS-zoom fix (16px inputs).
 - [x] **T10.2 Mobile nav:** bottom tab bar (SVG icons, active pill, safe-area), top tabs desktop-only, content bottom padding, viewport-fit cover.
 - [x] **T10.3 Touch + polish:** 40–48px targets, modal drag handles, skeleton/glow/focus styles, reduced-motion support. ✅ VERIFIED (build + bottombar/fonts in HTML + 12/12 auth regression).
+- [x] **BUGFIX stale list:** delete/schedule ke baad SW purana cached `/api` response dikhata tha (pull-refresh par hi naya aata tha). Fix: SW `/api/*` ko touch nahi karta + cache `failtrail-v2` + client GET `no-store`. ✅ VERIFIED (build).
 
 ## Phase 2 Backlog (baaki)
 - FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
