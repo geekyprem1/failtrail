@@ -42,6 +42,7 @@ async function main() {
   await check('GET history bina login → 401', () => get('/api/history?from=2026-09-01&to=2026-09-03'), 401);
   await check('POST analyze bina login → 401', () => post('/api/analyze', {}), 401);
   await check('GET analyze bina login → 401', () => get('/api/analyze'), 401);
+  await check('GET gamification bina login → 401', () => get('/api/gamification?date=2026-09-03'), 401);
   await check('POST claim bina login → 401', () => post('/api/auth/claim', {}), 401);
   await check('/login page → 200', () => get('/login'), 200);
 

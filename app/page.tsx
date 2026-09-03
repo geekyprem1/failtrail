@@ -8,6 +8,7 @@ import ReasonModal, { type ReasonMode, type ReasonResult } from '@/components/Re
 import RequireAuth from '@/components/RequireAuth';
 import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 import StatsStrip, { type DayStats } from '@/components/StatsStrip';
+import GamificationStrip, { type GamiData } from '@/components/GamificationStrip';
 import TaskForm from '@/components/TaskForm';
 import TaskList from '@/components/TaskList';
 import { useAlarms } from '@/hooks/useAlarms';
@@ -41,6 +42,8 @@ export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [sessions, setSessions] = useState<Record<string, TaskSession>>({});
   const [stats, setStats] = useState<DayStats | null>(null);
+  const [gami, setGami] = useState<GamiData | null>(null);
+  const [toast, setToast] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editing, setEditing] = useState<Task | null>(null);
@@ -78,6 +81,14 @@ export default function Home() {
         setStats(st.ok ? st.data : null);
       } catch {
         setStats(null);
+      }
+      // gamification fail ho to page mat roko (migration pending ho sakta hai)
+      try {
+        const gRes = await fetch(`/api/gamification?date=${date}`, { cache: 'no-store' });
+        const g = await gRes.json();
+        setGami(g.ok ? g.data : null);
+      } catch {
+        setGami(null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Load fail ho gaya');
@@ -173,7 +184,15 @@ export default function Home() {
 
   async function submitComplete(f: CompletionResult) {
     if (!completeFor) return;
-    await postJson('/api/sessions', { action: 'complete', session_id: completeFor.session.id, ...f });
+    const d = (await postJson('/api/sessions', {
+      action: 'complete',
+      session_id: completeFor.session.id,
+      ...f,
+    })) as { xp_awarded?: number } | null;
+    if (d && typeof d.xp_awarded === 'number' && d.xp_awarded > 0) {
+      setToast(t.gami.xpToast(d.xp_awarded));
+      window.setTimeout(() => setToast(''), 4000);
+    }
     setCompleteFor(null);
     await refresh();
   }
@@ -198,6 +217,8 @@ export default function Home() {
       </header>
 
       <StatsStrip stats={stats} />
+
+      <GamificationStrip gami={gami} />
 
       <div className="card animate-rise mb-4 p-2.5">
         <div className="flex items-center gap-2">
@@ -257,6 +278,12 @@ export default function Home() {
           >
             {t.common.ok}
           </button>
+        </div>
+      )}
+
+      {toast && (
+        <div className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 animate-rise rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-black text-white shadow-xl shadow-orange-500/30 sm:bottom-8">
+          {toast}
         </div>
       )}
 

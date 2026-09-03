@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAuthedClient } from '@/lib/supabaseServer';
 import { REASON_CODES } from '@/lib/tasks';
+import { xpForTask } from '@/lib/gamification';
 
 /**
  * POST /api/sessions — timer lifecycle (single endpoint, action-based).
@@ -231,7 +232,20 @@ export async function POST(req: NextRequest) {
       .single();
     if (cErr) return err(cErr.message, 500);
     await db.from('tasks').update({ status: 'completed' }).eq('id', session.task_id);
-    return NextResponse.json({ ok: true, data: { session: updated, completion } });
+    // XP award — best-effort (migration pending ho to complete nahi rukega)
+    let xp_awarded = 0;
+    try {
+      xp_awarded = xpForTask(a.difficulty, Math.floor((settled.total_focus_sec ?? 0) / 60));
+      await db.from('xp_events').insert({
+        user_id: user.id,
+        kind: 'task_complete',
+        points: xp_awarded,
+        task_id: session.task_id,
+      });
+    } catch {
+      xp_awarded = 0;
+    }
+    return NextResponse.json({ ok: true, data: { session: updated, completion, xp_awarded } });
   }
 
   const { data: interruption, error: iErr } = await db

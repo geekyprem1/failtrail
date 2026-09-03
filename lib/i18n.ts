@@ -21,6 +21,18 @@ const hinglish = {
     text: 'Alarm ki notification ke liye permission do.',
     allow: 'Allow karo',
   },
+  gami: {
+    streakLabel: 'Streak',
+    todayDone: 'Aaj pakka — kal phir!',
+    todayPending: 'Aaj baki — streak pakka karo',
+    noStreak: 'Pehla task complete karo, aag jalegi',
+    score: 'Score',
+    next: (x: number) => `Agla: ${x} XP`,
+    maxed: 'MAX',
+    best: 'Best',
+    levels: ['Naya Khiladi', 'Mehnati', 'Lagatar', 'Joshila', 'Champion', 'Legend', 'Guru'],
+    xpToast: (n: number) => `+${n} XP mile!`,
+  },
   auth: {
     sub: 'Ek OTP se login — password yaad rakhne ka jhanjhat nahi.',
     emailPh: 'tumhara@email.com',
@@ -204,6 +216,18 @@ const en: Strings = {
   perm: {
     text: 'Allow notifications so the alarm can reach you.',
     allow: 'Allow',
+  },
+  gami: {
+    streakLabel: 'Streak',
+    todayDone: 'Locked today — again tomorrow!',
+    todayPending: 'Today pending — lock it in',
+    noStreak: 'Finish one task to light the fire',
+    score: 'Score',
+    next: (x: number) => `Next: ${x} XP`,
+    maxed: 'MAX',
+    best: 'Best',
+    levels: ['Rookie', 'Grinder', 'Consistent', 'Driven', 'Champion', 'Legend', 'Guru'],
+    xpToast: (n: number) => `+${n} XP earned!`,
   },
   auth: {
     sub: 'One OTP login — no passwords to remember.',

@@ -87,6 +87,13 @@
 - [x] **T10.3 Touch + polish:** 40–48px targets, modal drag handles, skeleton/glow/focus styles, reduced-motion support. ✅ VERIFIED (build + bottombar/fonts in HTML + 12/12 auth regression).
 - [x] **BUGFIX stale list:** delete/schedule ke baad SW purana cached `/api` response dikhata tha (pull-refresh par hi naya aata tha). Fix: SW `/api/*` ko touch nahi karta + cache `failtrail-v2` + client GET `no-store`. ✅ VERIFIED (build).
 
+## Phase 11 — Streak + Gamification
+- [x] **XP ledger:** `supabase/gamification.sql` (`xp_events` + RLS). ✅ FILE READY — **USER STEP: baaki migrations ke saath Run karo.**
+- [x] **Scoring:** `lib/gamification.ts` — day score (60/30/10), streak (pending-today aware), 7 levels, XP formula. ✅ VERIFIED (19/19 unit).
+- [x] **API:** `GET /api/gamification` (score+streak+XP+level, backfill included) + complete par XP award (best-effort). ✅ VERIFIED (401 guard + build).
+- [x] **UI:** streak flame + level progress + score strip, `+XP` toast on complete, EN/Hinglish. ✅ VERIFIED (build).
+- [ ] **User verify:** migration Run → task complete karo → strip + toast + streak dekho.
+
 ## Phase 2 Backlog (baaki)
 - FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
 
