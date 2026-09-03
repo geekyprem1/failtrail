@@ -66,7 +66,13 @@ Docs: `PRD.md` (features), `ARCHITECTURE.md` (design + schema + API), `TASKS.md`
 2. Deploy → Cron auto-register (`/api/cron/weekly`, Sunday 21:00 IST).
 3. Smoke: 1 task end-to-end (plan → ring → start → pause+reason → resume → complete+feedback → History → Insights me on-demand report).
 
-## 5. Login (Email OTP)
+## 5. Login (Email OTP + link)
+
+`/login` par email dalo → OTP/code **ya email ka link** — dono se login hota hai
+(`/auth/callback` link wale flow ko handle karta hai).
+Dashboard me 1 setting: Supabase → **Authentication → URL Configuration** →
+**Site URL** = prod URL + **Redirect URLs** me prod aur `http://localhost:3000/*` add karo,
+warna email link block ho jayega.
 
 `/login` par email dalo → 6-digit OTP → verify. Pehli login par purana
 bina-user data auto-claim ho jata hai (`/api/auth/claim`). Bina login har API 401 deta hai.

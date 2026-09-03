@@ -1,15 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 import { useSession } from '@/lib/useSession';
 import { useLang } from '@/components/LanguageProvider';
 
+/** Query param (?error=link) padhta hai — static prerender nahi ho sakta. */
+export const dynamic = 'force-dynamic';
+
 /** Email OTP login — password yaad rakhne ka jhanjhat nahi. */
-export default function LoginPage() {
+function LoginForm() {
   const { t } = useLang();
   const router = useRouter();
+  const search = useSearchParams();
+  const linkError = search.get('error') === 'link';
   const { user, loading: sessLoading } = useSession();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -30,7 +35,11 @@ export default function LoginPage() {
     try {
       const { error: otpErr } = await supabase.auth.signInWithOtp({
         email: clean,
-        options: { shouldCreateUser: true },
+        options: {
+          shouldCreateUser: true,
+          // email ka link isi app par wapas aaye (code na mile to link se login)
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
       if (otpErr) throw otpErr;
       setEmail(clean);
@@ -99,6 +108,7 @@ export default function LoginPage() {
             <p className="mb-3 rounded-xl bg-indigo-50 px-3 py-2 text-xs font-medium text-indigo-800">
               {t.auth.codeSent(email)}
             </p>
+            <p className="mb-3 text-[11px] leading-4 text-zinc-500">{t.auth.linkHint}</p>
             <input
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 8))}
@@ -124,12 +134,26 @@ export default function LoginPage() {
           </form>
         )}
 
-        {error && (
+        {(error || linkError) && (
           <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
-            {error}
+            {error || t.auth.errLink}
           </p>
         )}
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6">
+          <div className="card p-8 text-center text-sm font-medium text-zinc-400">…</div>
+        </main>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
