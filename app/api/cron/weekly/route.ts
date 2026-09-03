@@ -30,9 +30,23 @@ export async function GET(req: NextRequest) {
   const from = weekMonday(today);
   const results = [];
   for (const u of users.users) {
+    // user ki last report wali language (default hinglish) — bina migration ke bhi safe
+    let lang: 'en' | 'hinglish' = 'hinglish';
     try {
-      const r = await analyzeWeek(from, today, { db, userId: u.id });
-      results.push({ user_id: u.id, skipped: r.skipped, insight_id: r.insight?.id ?? null });
+      const { data: last } = await db
+        .from('weekly_insights')
+        .select('lang')
+        .eq('user_id', u.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (last?.lang === 'en') lang = 'en';
+    } catch {
+      /* column missing — hinglish */
+    }
+    try {
+      const r = await analyzeWeek(from, today, { db, userId: u.id, lang });
+      results.push({ user_id: u.id, lang, skipped: r.skipped, insight_id: r.insight?.id ?? null });
     } catch (e) {
       results.push({ user_id: u.id, error: e instanceof Error ? e.message : 'fail' });
     }

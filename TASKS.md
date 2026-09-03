@@ -94,6 +94,12 @@
 - [x] **UI:** streak flame + level progress + score strip, `+XP` toast on complete, EN/Hinglish. ✅ VERIFIED (build).
 - [ ] **User verify:** migration Run → task complete karo → strip + toast + streak dekho.
 
+## Phase 12 — AI Language Toggle
+- [x] **Per-lang prompts:** `generateInsight(stats, lang)` — Hindi vs English coach, same JSON shape.
+- [x] **Flow:** `/api/analyze {lang}` + cron (user ki last-report language) + Insights page current-UI-lang bhejta hai + EN/HINGLISH badge. Migration-less fallback included.
+- [x] **Migration (optional):** `supabase/ai-lang.sql` — badge ke liye `lang` column. **USER STEP: Run karo.**
+- [ ] **User verify:** Insights par EN toggle → Generate → English report + badge. ✅ VERIFIED (build + 401 path; live EN user-side).
+
 ## Phase 2 Backlog (baaki)
 - FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
 

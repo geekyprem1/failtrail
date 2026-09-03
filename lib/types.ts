@@ -99,4 +99,5 @@ export interface WeeklyInsight {
   recommendations: string[];
   model_used: string;
   created_at: string;
+  lang: string | null;
 }

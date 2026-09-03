@@ -17,8 +17,7 @@ function fmtRange(week_start: string, week_end: string, lang: string): string {
 }
 
 export default function InsightsPage() {
-  const { t, lang } = useLang();
-  const [reports, setReports] = useState<WeeklyInsight[]>([]);
+  const { t, lang } = useLang();  const [reports, setReports] = useState<WeeklyInsight[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState('');
@@ -54,7 +53,7 @@ export default function InsightsPage() {
       const res = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: weekMonday(today), to: today }),
+        body: JSON.stringify({ from: weekMonday(today), to: today, lang }),
       });
       const j = await res.json();
       if (!j.ok) throw new Error(j.error || 'AI fail ho gaya');
@@ -120,6 +119,9 @@ export default function InsightsPage() {
                   {t.insights.week}: {fmtRange(r.week_start, r.week_end, lang)}
                 </p>
                 <p className="mt-0.5 text-[11px] font-medium text-zinc-400">
+                  <span className="mr-1 rounded bg-indigo-100 px-1.5 py-0.5 font-bold text-indigo-700">
+                    {(r.lang ?? 'hinglish').toUpperCase()}
+                  </span>
                   {r.patterns.length} patterns · {r.model_used} ·{' '}
                   <span className="font-bold text-indigo-600">
                     {openId === r.id ? `▲ ${t.insights.close}` : `▼ ${t.insights.open}`}

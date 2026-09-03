@@ -8,7 +8,9 @@ export interface AiInsight {
   recommendations: string[];
 }
 
-const SYSTEM_PROMPT = `Tu ek strict par kind Hindi (Devanagari) productivity coach hai. Tujhe user ke kuch dino ka failure/success data JSON me milega (sirf aggregates — counts, rates, averages).
+export type AiLang = 'en' | 'hinglish';
+
+const SYSTEM_PROMPT_HINGLISH = `Tu ek strict par kind Hindi (Devanagari) productivity coach hai. Tujhe user ke kuch dino ka failure/success data JSON me milega (sirf aggregates — counts, rates, averages).
 
 Rules:
 - Sirf diye gaye data se jawab de, guess mat kar. Data me jo nahi hai wo mat bana.
@@ -21,9 +23,23 @@ Rules:
  "category_analysis": "kis category me best/worst, 1-2 lines",
  "recommendations": ["agle week ka action 1", "action 2", "action 3"]}`;
 
+const SYSTEM_PROMPT_EN = `You are a strict but kind English productivity coach. You will receive a few days of the user's failure/success data as JSON (aggregates only — counts, rates, averages).
+
+Rules:
+- Answer ONLY from the given data, never guess. Do not invent what is not in the data.
+- Reason codes arrive in English (phone_social_media, neend_aalsi, mood_nahi, mushkil_laga, bhookh, guest_shor, urgent_kaam, light_net_issue, tabiyat, other) — explain them in plain English.
+- Tone: direct, practical, blame-free. Small actionable steps, no preaching.
+- Output ONLY valid JSON, no extra text/markdown:
+{"summary": "3-4 lines, whole-period gist (with numbers)",
+ "patterns": ["daily repeating pattern 1", "pattern 2", "pattern 3 (as many as data shows, max 3)"],
+ "time_analysis": "which time slot fails most, 1-2 lines",
+ "category_analysis": "best/worst category, 1-2 lines",
+ "recommendations": ["next-week action 1", "action 2", "action 3"]}`;
+
 /** OpenRouter chat call (server-only — key kabhi client me mat bhejo). 60s timeout. */
 export async function generateInsight(
-  stats: WeekStats
+  stats: WeekStats,
+  lang: AiLang = 'hinglish'
 ): Promise<{ insight: AiInsight; model: string }> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) throw new Error('OPENROUTER_API_KEY missing (.env.local me bharo)');
@@ -40,7 +56,7 @@ export async function generateInsight(
     body: JSON.stringify({
       model,
       messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: lang === 'en' ? SYSTEM_PROMPT_EN : SYSTEM_PROMPT_HINGLISH },
         {
           role: 'user',
           content: `Week ${stats.range.from} to ${stats.range.to} ka data:\n${JSON.stringify(stats)}`,

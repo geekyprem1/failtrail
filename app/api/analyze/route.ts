@@ -16,7 +16,7 @@ function unauthorized() {
  * Default: is week ka Monday → aaj. Zero tasks → { skipped: true }, AI call nahi.
  */
 export async function POST(req: NextRequest) {
-  let body: { from?: string; to?: string } = {};
+  let body: { from?: string; to?: string; lang?: string } = {};
   try {
     body = await req.json();
   } catch {
@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
   const today = todayISO();
   const from = body.from ?? weekMonday(today);
   const to = body.to ?? today;
+  const lang = body.lang === 'en' ? 'en' : 'hinglish';
 
   if (!DATE_RE.test(from) || !DATE_RE.test(to) || from > to) {
     return NextResponse.json({ ok: false, error: 'from/to YYYY-MM-DD me, from ≤ to' }, { status: 400 });
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await analyzeWeek(from, to, { db, userId: user.id });
+    const result = await analyzeWeek(from, to, { db, userId: user.id, lang });
     return NextResponse.json({ ok: true, data: result });
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'AI fail ho gaya';
