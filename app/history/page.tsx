@@ -120,9 +120,9 @@ export default function HistoryPage() {
 
   return (
     <RequireAuth>
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-10 pt-6">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-6 sm:pb-10">
       <header className="mb-5">
-        <h1 className="bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-[1.7rem] font-black leading-tight tracking-tight text-transparent">
+        <h1 className="font-display bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-[1.7rem] font-black leading-tight tracking-tight text-transparent">
           {t.history.title}
         </h1>
         <p className="mt-0.5 text-xs font-medium text-zinc-500">{t.history.sub}</p>

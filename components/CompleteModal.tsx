@@ -50,6 +50,7 @@ export default function CompleteModal({ taskTitle, onSubmit, onCancel }: Props) 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-indigo-950/60 p-4 backdrop-blur-sm sm:items-center">
       <div className="slim-scroll max-h-[90vh] w-full max-w-md animate-rise overflow-y-auto rounded-3xl border border-white/60 bg-white/95 p-5 shadow-2xl backdrop-blur">
+        <span className="mx-auto mb-3 block h-1.5 w-12 rounded-full bg-zinc-200 sm:hidden" />
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-green-600 text-lg font-black text-white shadow-lg shadow-green-500/30">
           ✓
         </span>

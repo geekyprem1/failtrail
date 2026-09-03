@@ -115,7 +115,7 @@ export default function TaskForm({ date, tasks, editing, onDone, onCancelEdit }:
                   setDuration(d);
                   setCustomDuration('');
                 }}
-                className={`rounded-full px-3 py-1.5 text-xs font-bold tabular-nums transition-all active:scale-95 ${
+                className={`rounded-full px-3 py-2 min-h-[40px] text-xs font-bold tabular-nums transition-all active:scale-95 ${
                   !customDuration && duration === d
                     ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/25'
                     : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'

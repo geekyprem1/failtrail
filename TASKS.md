@@ -81,6 +81,11 @@
 - [x] **Login UI:** `/login` OTP + nav auth state + `RequireAuth` gates + claim on first login. ✅ VERIFIED (build + `/login` 200).
 - [ ] **User verify:** migration Run → `SUPABASE_SERVICE_ROLE_KEY` env me → OTP login → purana data claim → full loop. (user step)
 
+## Phase 10 — $10k Mobile + Typography Polish
+- [x] **T10.1 Typography:** Plus Jakarta Sans (body) + Bricolage Grotesque (display) via next/font, `font-display` headings/numbers, iOS-zoom fix (16px inputs).
+- [x] **T10.2 Mobile nav:** bottom tab bar (SVG icons, active pill, safe-area), top tabs desktop-only, content bottom padding, viewport-fit cover.
+- [x] **T10.3 Touch + polish:** 40–48px targets, modal drag handles, skeleton/glow/focus styles, reduced-motion support. ✅ VERIFIED (build + bottombar/fonts in HTML + 12/12 auth regression).
+
 ## Phase 2 Backlog (baaki)
 - FCM push, streaks, Pomodoro breaks, PDF export, i18n toggle.
 

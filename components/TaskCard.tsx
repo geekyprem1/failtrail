@@ -68,7 +68,7 @@ export default function TaskCard({ task, onEdit, onDelete, onDuplicate, onStart 
           {startable && (
             <button
               onClick={() => onStart(task)}
-              className="rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:brightness-110 active:scale-95"
+              className="rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 px-3.5 py-2 min-h-[40px] text-xs font-bold text-white shadow-md shadow-indigo-600/25 transition-all hover:brightness-110 active:scale-95"
             >
               {t.card.start}
             </button>
@@ -85,7 +85,7 @@ export default function TaskCard({ task, onEdit, onDelete, onDuplicate, onStart 
             onClick={() => {
               if (window.confirm(t.card.delConfirm(task.title))) onDelete(task.id);
             }}
-            className="rounded-lg border border-red-100 px-3 py-1.5 text-xs font-semibold text-red-500 transition-all hover:bg-red-50 active:scale-95"
+            className="rounded-lg border border-red-100 px-3 py-2 min-h-[40px] text-xs font-semibold text-red-500 transition-all hover:bg-red-50 active:scale-95"
           >
             {t.card.del}
           </button>

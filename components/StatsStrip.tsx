@@ -33,7 +33,7 @@ export default function StatsStrip({ stats }: { stats: DayStats | null }) {
           className="card animate-rise p-2.5 text-center"
         >
           <p
-            className={`bg-gradient-to-r ${tile.grad} bg-clip-text text-xl font-black tabular-nums text-transparent`}
+            className={`bg-gradient-to-r ${tile.grad} bg-clip-text font-display text-xl font-black tabular-nums text-transparent`}
           >
             {tile.value}
           </p>

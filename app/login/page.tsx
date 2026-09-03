@@ -79,12 +79,12 @@ function LoginForm() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-10 pt-10">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-10 sm:pb-10">
       <div className="card animate-rise mx-auto max-w-md p-6 text-center">
         <span className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 text-2xl font-black text-white shadow-lg shadow-indigo-600/30">
           F
         </span>
-        <h1 className="bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-2xl font-black tracking-tight text-transparent">
+        <h1 className="font-display bg-gradient-to-r from-indigo-700 via-violet-600 to-indigo-700 bg-clip-text text-2xl font-black tracking-tight text-transparent">
           FailTrail
         </h1>
         <p className="mt-1 text-xs font-medium text-zinc-500">{t.auth.sub}</p>

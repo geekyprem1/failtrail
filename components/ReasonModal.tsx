@@ -45,7 +45,8 @@ export default function ReasonModal({ mode, onSubmit, onCancel }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-indigo-950/60 p-4 backdrop-blur-sm sm:items-center">
       <div className="slim-scroll max-h-[90vh] w-full max-w-md animate-rise overflow-y-auto rounded-3xl border border-white/60 bg-white/95 p-5 shadow-2xl backdrop-blur">
-        <h2 className="text-base font-extrabold tracking-tight text-zinc-900">
+        <span className="mx-auto mb-3 block h-1.5 w-12 rounded-full bg-zinc-200 sm:hidden" />
+        <h2 className="font-display text-base font-extrabold tracking-tight text-zinc-900">
           {t.reason.titles[mode]}
         </h2>
         <p className="mt-0.5 text-xs text-zinc-500">{t.reason.subtitle}</p>

@@ -101,7 +101,7 @@ export default function FocusTimer({
             </defs>
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-black tabular-nums tracking-tight text-zinc-900">
+            <span className="font-display text-xl font-black tabular-nums tracking-tight text-zinc-900">
               {fmt(remaining)}
             </span>
           </div>

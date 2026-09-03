@@ -6,7 +6,7 @@ import { useLang } from './LanguageProvider';
 export default function LangToggle() {
   const { lang, setLang } = useLang();
   const btn = (active: boolean) =>
-    `rounded-full px-3 py-1 text-[11px] font-bold transition-all ${
+    `rounded-full px-3 py-1.5 min-h-[36px] text-[11px] font-bold transition-all ${
       active ? 'bg-white text-indigo-700 shadow' : 'text-white/70 hover:text-white'
     }`;
   return (
